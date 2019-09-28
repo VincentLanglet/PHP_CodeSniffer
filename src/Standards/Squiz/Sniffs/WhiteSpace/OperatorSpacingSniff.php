@@ -33,6 +33,20 @@ class OperatorSpacingSniff implements Sniff
      */
     public $ignoreNewlines = false;
 
+    /**
+     * Allow newlines before the operator instead of spaces.
+     *
+     * @var boolean
+     */
+    public $ignoreNewLineBefore = false;
+
+    /**
+     * Allow newlines after the operator instead of spaces.
+     *
+     * @var boolean
+     */
+    public $ignoreNewLineAfter = false;
+
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -88,7 +102,9 @@ class OperatorSpacingSniff implements Sniff
 
                 $phpcsFile->recordMetric($stackPtr, 'Space before operator', $found);
                 if ($found !== 1
-                    && ($found !== 'newline' || $this->ignoreNewlines === false)
+                    && ($found !== 'newline'
+                        || $this->ignoreNewlines === false && $this->ignoreNewLineBefore === false
+                    )
                 ) {
                     $error = 'Expected 1 space before "&" operator; %s found';
                     $data  = [$found];
@@ -117,7 +133,9 @@ class OperatorSpacingSniff implements Sniff
 
                 $phpcsFile->recordMetric($stackPtr, 'Space after operator', $found);
                 if ($found !== 1
-                    && ($found !== 'newline' || $this->ignoreNewlines === false)
+                    && ($found !== 'newline'
+                        || $this->ignoreNewlines === false && $this->ignoreNewLineAfter === false
+                    )
                 ) {
                     $error = 'Expected 1 space after "&" operator; %s found';
                     $data  = [$found];
@@ -155,7 +173,9 @@ class OperatorSpacingSniff implements Sniff
 
             $phpcsFile->recordMetric($stackPtr, 'Space before operator', $found);
             if ($found !== 1
-                && ($found !== 'newline' || $this->ignoreNewlines === false)
+                && ($found !== 'newline'
+                    || $this->ignoreNewlines === false && $this->ignoreNewLineBefore === false
+                )
             ) {
                 $error = 'Expected 1 space before "%s"; %s found';
                 $data  = [
@@ -209,7 +229,9 @@ class OperatorSpacingSniff implements Sniff
 
             $phpcsFile->recordMetric($stackPtr, 'Space after operator', $found);
             if ($found !== 1
-                && ($found !== 'newline' || $this->ignoreNewlines === false)
+                && ($found !== 'newline'
+                    || $this->ignoreNewlines === false && $this->ignoreNewLineAfter === false
+                )
             ) {
                 $error = 'Expected 1 space after "%s"; %s found';
                 $data  = [

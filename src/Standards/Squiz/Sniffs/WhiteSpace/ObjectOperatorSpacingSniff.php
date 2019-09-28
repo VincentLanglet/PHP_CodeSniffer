@@ -22,6 +22,20 @@ class ObjectOperatorSpacingSniff implements Sniff
      */
     public $ignoreNewlines = false;
 
+    /**
+     * Allow newlines before the operator instead of spaces.
+     *
+     * @var boolean
+     */
+    public $ignoreNewLineBefore = false;
+
+    /**
+     * Allow newlines after the operator instead of spaces.
+     *
+     * @var boolean
+     */
+    public $ignoreNewLineAfter = false;
+
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -99,7 +113,9 @@ class ObjectOperatorSpacingSniff implements Sniff
     protected function checkSpacingBeforeOperator(File $phpcsFile, $stackPtr, $before)
     {
         if ($before !== 0
-            && ($before !== 'newline' || $this->ignoreNewlines === false)
+            && ($before !== 'newline'
+                || $this->ignoreNewlines === false && $this->ignoreNewLineBefore === false
+            )
         ) {
             $error = 'Space found before object operator';
             $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'Before');
@@ -138,7 +154,9 @@ class ObjectOperatorSpacingSniff implements Sniff
     protected function checkSpacingAfterOperator(File $phpcsFile, $stackPtr, $after)
     {
         if ($after !== 0
-            && ($after !== 'newline' || $this->ignoreNewlines === false)
+            && ($after !== 'newline'
+                || $this->ignoreNewlines === false && $this->ignoreNewLineAfter === false
+            )
         ) {
             $error = 'Space found after object operator';
             $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'After');

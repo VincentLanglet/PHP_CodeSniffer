@@ -30,6 +30,20 @@ class ConcatenationSpacingSniff implements Sniff
      */
     public $ignoreNewlines = false;
 
+    /**
+     * Allow newlines before the concatenation instead of spaces.
+     *
+     * @var boolean
+     */
+    public $ignoreNewLineBefore = false;
+
+    /**
+     * Allow newlines after the concatenation instead of spaces.
+     *
+     * @var boolean
+     */
+    public $ignoreNewLineAfter = false;
+
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -92,12 +106,16 @@ class ConcatenationSpacingSniff implements Sniff
         $phpcsFile->recordMetric($stackPtr, 'Spacing after string concat', $after);
 
         if (($ignoreBefore === true
-            || $before === $this->spacing
-            || ($before === 'newline'
-            && $this->ignoreNewlines === true))
+                || $before === $this->spacing
+                || ($before === 'newline'
+                    && ($this->ignoreNewlines === true
+                        || $this->ignoreNewLineBefore === true)
+                ))
             && ($after === $this->spacing
-            || ($after === 'newline'
-            && $this->ignoreNewlines === true))
+                || ($after === 'newline'
+                    && ($this->ignoreNewlines === true
+                        || $this->ignoreNewLineAfter === true)
+                ))
         ) {
             return;
         }
@@ -119,7 +137,9 @@ class ConcatenationSpacingSniff implements Sniff
 
         if ($fix === true) {
             $padding = str_repeat(' ', $this->spacing);
-            if ($ignoreBefore === false && ($before !== 'newline' || $this->ignoreNewlines === false)) {
+            if ($ignoreBefore === false
+                && ($before !== 'newline' || $this->ignoreNewlines === false && $this->ignoreNewLineBefore === false)
+            ) {
                 if ($tokens[($stackPtr - 1)]['code'] === T_WHITESPACE) {
                     $phpcsFile->fixer->beginChangeset();
                     $phpcsFile->fixer->replaceToken(($stackPtr - 1), $padding);
@@ -136,7 +156,7 @@ class ConcatenationSpacingSniff implements Sniff
                 }
             }
 
-            if ($after !== 'newline' || $this->ignoreNewlines === false) {
+            if ($after !== 'newline' || $this->ignoreNewlines === false && $this->ignoreNewLineAfter === false) {
                 if ($tokens[($stackPtr + 1)]['code'] === T_WHITESPACE) {
                     $phpcsFile->fixer->beginChangeset();
                     $phpcsFile->fixer->replaceToken(($stackPtr + 1), $padding);
