@@ -381,3 +381,14 @@ public function setTranslator($a, &$b): void
 {
     $this->translator = $translator;
 }
+
+class Bar {
+    /**
+     * The PHP5 constructor
+     *
+     * @return
+     */
+    public function __construct() {
+
+    }
+}
